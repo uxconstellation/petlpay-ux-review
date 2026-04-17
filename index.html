@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petl Pay — UX Review: Business-Aligned Findings | Constellation</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e1117;
+      --bg-card: #1B1C21;
+      --deep-teal: #173F3F;
+      --orange: #FE6E36;
+      --near-black: #160C15;
+      --mid-teal: #4A9E9E;
+      --text: rgba(255,255,255,0.85);
+      --text-muted: rgba(255,255,255,0.5);
+      --max-width: 900px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Satoshi', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(14, 17, 23, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 0 24px;
+    }
+
+    .nav-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 16px;
+      position: relative;
+    }
+
+    .nav-logo img { height: 32px; display: block; }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 5px 9px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Satoshi', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 800px) {
+      .nav-toggle { display: block; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: -24px;
+        right: -24px;
+        background: rgba(14, 17, 23, 0.98);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        padding: 10px 16px 14px;
+        gap: 1px;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 9px 12px; font-size: 13px; }
+    }
+
+    /* LAYOUT */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 88px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; }
+
+    h2 {
+      font-size: clamp(26px, 4vw, 38px);
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 14px;
+      margin-top: 44px;
+    }
+
+    h3:first-of-type { margin-top: 0; }
+
+    p {
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    strong { color: #fff; font-weight: 600; }
+
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* HERO */
+    #hero {
+      padding: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background:
+        radial-gradient(ellipse at 75% 40%, rgba(23,63,63,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 85%, rgba(254,110,54,0.1) 0%, transparent 45%),
+        linear-gradient(170deg, #0d1219 0%, #0e1117 60%, #111520 100%);
+    }
+
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 120px 24px 96px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid-teal);
+      border: 1px solid rgba(74,158,158,0.35);
+      background: rgba(74,158,158,0.07);
+      padding: 5px 16px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(38px, 7.5vw, 68px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin-bottom: 20px;
+    }
+
+    .hero-title span { color: var(--orange); }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.5vw, 19px);
+      color: var(--text-muted);
+      font-weight: 400;
+      max-width: 560px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-right: 40px;
+      margin-bottom: 16px;
+    }
+
+    .hero-meta-item:not(:last-child) {
+      border-right: 1px solid rgba(255,255,255,0.07);
+      margin-right: 40px;
+    }
+
+    .hero-meta-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero-meta-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .hero-meta-item:not(:last-child) {
+        border-right: none;
+        margin-right: 24px;
+        padding-right: 0;
+      }
+    }
+
+    /* TABLES */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 28px 0;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 480px;
+    }
+
+    thead th {
+      background: rgba(255,255,255,0.035);
+      padding: 13px 20px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    tbody td {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: top;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .badge-critical {
+      background: rgba(254,110,54,0.15);
+      border: 1px solid rgba(254,110,54,0.4);
+      color: var(--orange);
+    }
+
+    .badge-high {
+      border: 1px solid rgba(74,158,158,0.4);
+      color: var(--mid-teal);
+      background: rgba(74,158,158,0.08);
+    }
+
+    .badge-medium {
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.55);
+      background: transparent;
+    }
+
+    .badge-low {
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+      background: transparent;
+    }
+
+    /* ISSUE CARDS */
+    .issue-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .issue-number {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: rgba(254,110,54,0.12);
+      border: 1px solid rgba(254,110,54,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--orange);
+    }
+
+    .issue-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .issue-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 0 0 8px;
+      line-height: 1.6;
+    }
+
+    .issue-content p:last-child { margin-bottom: 0; }
+
+    .issue-meta {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* CALLOUT */
+    .callout {
+      background: rgba(254,110,54,0.06);
+      border: 1px solid rgba(254,110,54,0.18);
+      border-left: 3px solid var(--orange);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* PILLAR GRID */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 28px 0;
+    }
+
+    @media (max-width: 640px) {
+      .pillar-grid { grid-template-columns: 1fr; }
+    }
+
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .pillar-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .pillar-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .pillar-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* QUESTION GROUP */
+    .question-group {
+      margin-bottom: 32px;
+    }
+
+    .question-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid-teal);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .question-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .question-list li {
+      font-size: 14px;
+      color: var(--text);
+      padding: 10px 0 10px 22px;
+      position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      line-height: 1.55;
+    }
+
+    .question-list li:last-child { border-bottom: none; }
+
+    .question-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mid-teal);
+      opacity: 0.7;
+    }
+
+    /* STEP CARDS */
+    .step-card {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1B1C21;
+    }
+
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--near-black);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 60px 24px;
+    }
+
+    .footer-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .footer-logo img { height: 36px; display: block; }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 0.05em;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      section { padding: 64px 0; }
+      .hero-inner { padding: 80px 20px 64px; }
+      .issue-card { flex-direction: column; gap: 12px; }
+      .step-card { flex-direction: column; gap: 12px; }
+      .container { padding: 0 20px; }
+      h3 { margin-top: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <a href="#hero">
+        <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031309018/VUvMUdEsLdUtSsXl.png" alt="Constellation">
+      </a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#approach">01 Approach</a></li>
+      <li><a href="#workflow">02 Workflow</a></li>
+      <li><a href="#missing">03 Missing Views</a></li>
+      <li><a href="#constraints">04 Constraints</a></li>
+      <li><a href="#quickwins">05 Quick Wins</a></li>
+      <li><a href="#questions">06 Questions</a></li>
+      <li><a href="#summary">07 Summary</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">UX Review &mdash; April 2026</div>
+    <h1 class="hero-title">Petl Pay<br><span>UX Review</span></h1>
+    <p class="hero-subtitle">Business-aligned findings from an initial platform audit, prepared ahead of discovery call with Steve Greg.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Platform</span>
+        <span class="hero-meta-value">Petl Pay</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Prepared by</span>
+        <span class="hero-meta-value">Aldo Calitz</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Date</span>
+        <span class="hero-meta-value">16 April 2026</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Scope</span>
+        <span class="hero-meta-value">Existing functionality</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 01 APPROACH -->
+<section id="approach">
+  <div class="container">
+    <span class="section-label">01 &mdash; How We Approached This Review</span>
+    <h2>Reviewed as a first-time user, not as a designer</h2>
+    <p>Rather than treating this as a visual redesign exercise, the platform was navigated as a new user would, with no prior briefing. Every finding below is framed through the three core jobs your users need to do. Everything flagged is a place where the current design creates friction, ambiguity, or confusion in one of these three jobs.</p>
+    <p>The scope is intentional: practical design improvements to existing functionality. No new prototypes. No stablecoin or wallet complexity. Focus on reducing ambiguity, improving user efficiency, and helping users understand how the platform works.</p>
+
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <span class="pillar-num">Job 01</span>
+        <h4>Log billable work</h4>
+        <p>Quickly and accurately, for the right project and the right person.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-num">Job 02</span>
+        <h4>Get paid</h4>
+        <p>Understand what is owed, when, and how to receive it.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-num">Job 03</span>
+        <h4>Pay a team</h4>
+        <p>Understand what each person is owed, action it confidently, and have a record of it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 CORE WORKFLOW -->
+<section id="workflow">
+  <div class="container">
+    <span class="section-label">02 &mdash; Section 1: Core Workflow Observations</span>
+    <h2>Three friction points in the core payment loop</h2>
+
+    <div class="issue-card">
+      <div class="issue-number">1</div>
+      <div class="issue-content">
+        <h4>1.1 &mdash; The work entry mechanics are sound. The mental model is not.</h4>
+        <p>The work entry form is structurally sound. The contextual placeholder text change is a genuinely good UX detail. However, a new user arriving at a blank project screen has no way of knowing what the form does, what happens when they submit, or what the "Custom amount" dropdown is for.</p>
+        <p><strong>The problem:</strong> Every project screen for every new user is an empty slate with no explanation. There is no example entry, no onboarding prompt, and no visual indication of what a completed work log looks like. Users are expected to figure out the workflow through trial and error.</p>
+        <p><strong>The opportunity:</strong> Contextual empty states that teach as they guide. The first time a user lands on a blank project, the screen should show a simplified, illustrated version of the completed workflow: here is what a logged work entry looks like, and here is how it becomes a payment.</p>
+        <div class="issue-meta">
+          <span class="badge badge-high">Wireframe Priority: High</span>
+          <span class="badge badge-medium">No new screen required</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-number">2</div>
+      <div class="issue-content">
+        <h4>1.2 &mdash; Crypto-first visual hierarchy creates hesitation before trust is established</h4>
+        <p>The platform presents three top-up options (USDC stablecoin, USD wire, EUR SEPA) with equal visual weight. For a user with no intention of using stablecoin, the presence of crypto terminology in a financial platform creates immediate hesitation. It signals complexity and risk before the user has understood the product's core value.</p>
+        <p><strong>The problem:</strong> The platform's identity is unclear at the wallet level. Is this a crypto-first product or a traditional payment product that also supports crypto? The current design suggests the former, even if the business intent is the latter.</p>
+        <p><strong>The opportunity:</strong> If bank transfer and SEPA are the primary intended routes, they should lead the UI. The stablecoin option should be secondary, clearly labelled as an advanced option, or accessible only via a disclosure toggle. This is a hierarchy decision, not a feature removal.</p>
+        <div class="issue-meta">
+          <span class="badge badge-medium">Wireframe Priority: Medium</span>
+          <span class="badge badge-medium">Modal redesign only</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-number">3</div>
+      <div class="issue-content">
+        <h4>1.3 &mdash; The highest-stakes action in the platform has no confirmation step</h4>
+        <p>The "Pay All" button is the highest-stakes action in the entire platform. It should communicate clearly: who is being paid, how much, from which balance, and give the user a confirmation step before anything is executed.</p>
+        <p>Currently, the button is always active and always silent. Clicking it with a zero balance produces no response whatsoever. There is no confirmation modal, no summary of what will happen, and no feedback that the action was received.</p>
+        <div class="callout">"On a payment platform, silent actions on financial buttons are unacceptable. This is not just a usability problem. It is a trust problem."</div>
+        <p><strong>The opportunity:</strong> A payment confirmation modal that shows contractor name(s), amount owed per person, total amount, source wallet/account, and a clear "Confirm payment" CTA. Even a basic version of this would dramatically increase user confidence.</p>
+        <div class="issue-meta">
+          <span class="badge badge-critical">Wireframe Priority: Critical</span>
+          <span class="badge badge-medium">Core transaction flow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 MISSING VIEWS -->
+<section id="missing">
+  <div class="container">
+    <span class="section-label">03 &mdash; Section 2: Missing Views and Features</span>
+    <h2>Three structural gaps that limit power-user utility</h2>
+    <p>The following are gaps that go beyond fixing existing screens. These are structural missing pieces that would significantly improve user clarity.</p>
+
+    <h3>2.1 &mdash; Missing: Financial Overview Across Projects and People</h3>
+    <p>Currently, a user who manages multiple projects and multiple contractors has no way to see a consolidated financial picture. There is no screen that answers:</p>
+    <ul style="list-style:none;padding:0;margin:16px 0 20px;">
+      <li style="padding:8px 0 8px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--text-muted);" class="q-item">How much have I paid out this month across all projects?</li>
+      <li style="padding:8px 0 8px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--text-muted);">How much is currently outstanding across all contractors?</li>
+      <li style="padding:8px 0 8px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--text-muted);">What is the payment history for a specific contractor across projects?</li>
+      <li style="padding:8px 0 8px 22px;position:relative;font-size:14px;color:var(--text-muted);">What is the financial summary for a specific project over time?</li>
+    </ul>
+    <p>This is the single most significant missing feature from a user efficiency standpoint. Power users managing several contractors will quickly outgrow a per-project view and will need this consolidated layer.</p>
+    <p><strong>Suggested screen:</strong> A Financials or Overview tab at the top level (not inside a project) showing total outstanding, total paid with date filter, a breakdown by project, and a breakdown by contractor. This can be a simple table at first.</p>
+    <div style="margin-top:12px;"><span class="badge badge-high">Wireframe Priority: High</span></div>
+
+    <h3>2.2 &mdash; Missing: Project Role Clarity — Owner vs. Contributor</h3>
+    <p>The current navigation shows all projects in the same sidebar list with identical visual treatment. There is no distinction between projects you created and manage (where you are the payer) and projects you were invited to contribute on (where you are the payee).</p>
+    <p>This distinction is fundamental to the platform's dual-sided nature. A contractor who is both a project owner for their own team and a contributor on a client's project will face immediate confusion about which view they are in and what actions are available to them.</p>
+    <p><strong>The opportunity:</strong> A simple visual indicator (badge, label, or sidebar group) that separates "Projects I manage" from "Projects I work on." This could also inform different default views when entering each project type.</p>
+    <div style="margin-top:12px;"><span class="badge badge-high">Wireframe Priority: High</span></div>
+
+    <h3>2.3 &mdash; Missing: Progressive Onboarding for New Users</h3>
+    <p>The dashboard "What's New" feed is designed for existing users catching up on product updates. For a brand new user, it provides no orientation to the platform's core workflow. There is no setup checklist, no guided first-project flow, and no "here is how to get started" moment.</p>
+    <p><strong>The opportunity:</strong> A one-time onboarding state on the dashboard that walks the user through three steps: Create your first project, Invite a team member, Log your first work entry. Once complete, the dashboard reverts to its current state. This is a low-effort, high-impact addition.</p>
+    <div style="margin-top:12px;"><span class="badge badge-medium">Wireframe Priority: Medium</span></div>
+  </div>
+</section>
+
+<!-- 04 CONSTRAINTS -->
+<section id="constraints">
+  <div class="container">
+    <span class="section-label">04 &mdash; Section 3: Design and Platform Constraints</span>
+    <h2>Four constraints to validate with the product team</h2>
+    <p>These are observations that need validation before firm recommendations are made. They may reflect intentional product decisions.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Constraint</th>
+            <th>Observation</th>
+            <th>What We Need to Know</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wallet as central infrastructure</strong></td>
+            <td>The current architecture places the wallet at the centre of the payment flow. Reducing dependency on the wallet may require a UX restructure.</td>
+            <td>Is the wallet the intended primary flow, or a legacy architecture decision?</td>
+          </tr>
+          <tr>
+            <td><strong>Single currency per project</strong></td>
+            <td>Projects appear to be locked to a single currency at creation. This limits utility for contractors working across currency zones.</td>
+            <td>Is this a technical constraint or a product decision? Is multi-currency on the roadmap?</td>
+          </tr>
+          <tr>
+            <td><strong>No visible rate history per contractor</strong></td>
+            <td>The contractor profile view inside project settings only shows the current configuration, not history.</td>
+            <td>Does payment history exist on the back-end? If so, surfacing it in the UI is a quick win.</td>
+          </tr>
+          <tr>
+            <td><strong>Beta limitations</strong></td>
+            <td>Several flows (account management, identity verification) appear to be absent or incomplete.</td>
+            <td>Which absent features are intentionally deferred vs. structurally missing?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 05 QUICK WINS -->
+<section id="quickwins">
+  <div class="container">
+    <span class="section-label">05 &mdash; Section 4: Quick Wins</span>
+    <h2>Six improvements requiring no new screens</h2>
+    <p>These are improvements that require no new screens and minimal development effort. Each one addresses a real friction point in the current experience.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Improvement</th>
+            <th>Effort</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Empty state messages on all blank project and wallet screens</td>
+            <td><span class="badge badge-high">Low</span></td>
+            <td><span class="badge badge-high">High</span></td>
+          </tr>
+          <tr>
+            <td>Currency label pill on sidebar wallet balance (show USD or EUR explicitly)</td>
+            <td><span class="badge badge-high">Low</span></td>
+            <td><span class="badge badge-high">High</span></td>
+          </tr>
+          <tr>
+            <td>Payment confirmation modal on "Pay All" button</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="badge badge-critical">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Primary / secondary CTA differentiation in all modals</td>
+            <td><span class="badge badge-high">Low</span></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Text labels alongside icon-only buttons (Settings, Add Project)</td>
+            <td><span class="badge badge-high">Low</span></td>
+            <td><span class="badge badge-medium">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Separate "Projects I manage" from "Projects I work on" in sidebar</td>
+            <td><span class="badge badge-high">Low</span></td>
+            <td><span class="badge badge-high">High</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 06 QUESTIONS -->
+<section id="questions">
+  <div class="container">
+    <span class="section-label">06 &mdash; Section 5: Questions for Friday's Call</span>
+    <h2>What we need to know before the second-round audit</h2>
+    <p>These are the questions that need to be answered to complete a more precise second-round audit and to bring useful wireframes or flows to the follow-up session with Steve Greg.</p>
+
+    <div class="question-group">
+      <span class="question-group-label">On the ICP</span>
+      <ul class="question-list">
+        <li>Who is the primary user of the platform: the business owner paying contractors, the contractor receiving payment, or both equally?</li>
+        <li>What is the typical team size? One owner managing 1&ndash;5 contractors, or larger?</li>
+        <li>What is the primary device? If contractors are logging work on mobile, touch target sizing and mobile layout become more critical.</li>
+      </ul>
+    </div>
+
+    <div class="question-group">
+      <span class="question-group-label">On the Platform's Direction</span>
+      <ul class="question-list">
+        <li>Is the stablecoin/USDC path intended to be a primary or secondary payment method? Should it be de-emphasised in the UI?</li>
+        <li>Are there plans to add a cross-project financial overview screen?</li>
+        <li>How does the platform handle projects where the user is a contributor, not an owner? Is that a live feature or on the roadmap?</li>
+        <li>What does the ideal onboarding journey look like? Is there a guided setup planned?</li>
+      </ul>
+    </div>
+
+    <div class="question-group">
+      <span class="question-group-label">On Constraints</span>
+      <ul class="question-list">
+        <li>Which absent features (account management, KYC, payment method setup) are deferred Beta items vs. features that have been intentionally omitted?</li>
+        <li>Is payment history stored and accessible on the back-end? If so, surfacing it in the UI is a quick win.</li>
+        <li>What is the business model? Understanding whether revenue comes from the payer, the payee, or a transaction fee informs how we prioritise the UI for each user type.</li>
+      </ul>
+    </div>
+
+    <div class="question-group">
+      <span class="question-group-label">On Design Direction</span>
+      <ul class="question-list">
+        <li>Are wireframes or annotated flows the preferred output for the second call, or would a written report with diagrams be more useful?</li>
+        <li>Is there an existing brand guide or design system we should work within?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 07 SUMMARY -->
+<section id="summary">
+  <div class="container">
+    <span class="section-label">07 &mdash; Summary: Where to Focus First</span>
+    <h2>Six priorities, ranked by business impact</h2>
+    <p>This is the recommended sequence for addressing the findings in this review. Priority 1 is a trust issue on the core transaction flow and should be resolved before any other design work begins.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Area</th>
+            <th>What to Fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--orange);">1</strong></td>
+            <td><strong>Payment confirmation</strong></td>
+            <td>Add a confirmation modal to the Pay All flow</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">2</strong></td>
+            <td><strong>Financial overview</strong></td>
+            <td>Design a cross-project financials screen</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">3</strong></td>
+            <td><strong>Project role clarity</strong></td>
+            <td>Separate owner and contributor projects in the navigation</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">4</strong></td>
+            <td><strong>Empty states</strong></td>
+            <td>Add guided empty states to all blank screens</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">5</strong></td>
+            <td><strong>Wallet hierarchy</strong></td>
+            <td>Deprioritise stablecoin, lead with bank transfer paths</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--orange);">6</strong></td>
+            <td><strong>Progressive onboarding</strong></td>
+            <td>Add a three-step first-time setup flow to the dashboard</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">This document is a living brief. It will be updated after the Friday discovery call once the product team has clarified the items in Section 5.</p>
+
+    <h3>Next Steps</h3>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Friday discovery call with Steve Greg</h4>
+        <p>Resolve the questions in Section 5 to complete a more precise second-round audit.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Second-round audit</h4>
+        <p>Refine findings with product team input. Confirm which constraints are technical vs. product decisions.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Wireframes for Priority 1, 2, and 3</h4>
+        <p>Deliver annotated wireframes or flows for the payment confirmation modal, financial overview screen, and project role clarity improvements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663031309018/VUvMUdEsLdUtSsXl.png" alt="Constellation">
+    </div>
+    <div class="footer-links">
+      <a href="https://uxconstellation.com" target="_blank" rel="noopener">uxconstellation.com</a>
+      <a href="mailto:aldo@uxconstellation.com">aldo@uxconstellation.com</a>
+    </div>
+    <div class="footer-divider"></div>
+    <p class="footer-tagline">Prepared by Aldo Calitz &mdash; UX Constellation &mdash; April 2026</p>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+</script>
+
+</body>
+</html>
